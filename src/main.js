@@ -54,6 +54,29 @@ bot.api.setMyCommands([
 ]);
 // Now that you specified how to handle messages, you can start your bot.
 // This will connect to the Telegram servers and wait for messages.
+// Create an instance of Express
+const app = express();
+app.use(bodyParser.json());
+
+// Define a route for the webhook
+app.post("/webhook", async (req, res) => {
+  try {
+    await bot.handleUpdate(req.body);
+  } catch (error) {
+    console.error("Error handling update:", error);
+  }
+  res.sendStatus(200);
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, async () => {
+  console.log(`Server running on port ${PORT}`);
+  // Set webhook
+  await bot.api.setWebhook(
+    `https://twujstarybot-nahwhadeh-erratinsilentios-projects.vercel.app/webhook`
+  );
+});
 
 // Start the bot.
-bot.start();
+//bot.start();
